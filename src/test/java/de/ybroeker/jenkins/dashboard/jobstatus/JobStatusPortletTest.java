@@ -3,33 +3,34 @@ package de.ybroeker.jenkins.dashboard.jobstatus;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.Offset.offset;
 
 
 public class JobStatusPortletTest {
 
+    JobStatusPortlet jobStatusPortlet = new JobStatusPortlet("-");
+
     @Test
     public void shouldCalculatePercentage() {
-        JobStatusPortlet jobStatusPortlet = new JobStatusPortlet("-");
+        final String percentage = jobStatusPortlet.getPercentage(5, 10);
+        assertThat(percentage).isEqualTo("50%");
+    }
 
-        final float percentage = jobStatusPortlet.getPercentage(5, 10);
-        assertThat(percentage).isCloseTo(50.0f, offset(0.00001f));
+    @Test
+    public void shouldPrintTwoFractionDigits() {
+        final String percentage = jobStatusPortlet.getPercentage(3, 9);
+        assertThat(percentage).isEqualTo("33.33%");
     }
 
     @Test
     public void shouldCalculatePercentageForZeroValue() {
-        JobStatusPortlet jobStatusPortlet = new JobStatusPortlet("-");
-
-        final float percentage = jobStatusPortlet.getPercentage(0, 100);
-        assertThat(percentage).isCloseTo(0.0f, offset(0.00001f));
+        final String percentage = jobStatusPortlet.getPercentage(0, 100);
+        assertThat(percentage).isEqualTo("0%");
     }
 
     @Test
     public void shouldNotFailOnZeroBuilds() {
-        JobStatusPortlet jobStatusPortlet = new JobStatusPortlet("-");
-
-        final float percentage = jobStatusPortlet.getPercentage(0, 0);
-        assertThat(percentage).isCloseTo(0.0f, offset(0.00001f));
+        final String percentage = jobStatusPortlet.getPercentage(0, 0);
+        assertThat(percentage).isEqualTo("0%");
     }
 
 }

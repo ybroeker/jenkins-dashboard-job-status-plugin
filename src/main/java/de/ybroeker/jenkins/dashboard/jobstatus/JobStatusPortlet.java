@@ -1,5 +1,6 @@
 package de.ybroeker.jenkins.dashboard.jobstatus;
 
+import java.text.NumberFormat;
 import java.util.*;
 
 import javax.annotation.Nonnull;
@@ -12,38 +13,34 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 public class JobStatusPortlet extends DashboardPortlet {
 
+    private final NumberFormat percentageFormat;
+
     @DataBoundConstructor
     public JobStatusPortlet(String name) {
         super(name);
+        percentageFormat = NumberFormat.getPercentInstance(Locale.ENGLISH);
+        percentageFormat.setMinimumFractionDigits(0);
+        percentageFormat.setMaximumFractionDigits(2);
     }
 
     public Map<BallColor, Integer> getBuildStat(List<TopLevelItem> jobs) {
-        SortedMap<BallColor, Integer> colStatBuilds = new TreeMap<BallColor, Integer>();
-        for (BallColor color : BallColor.values()) {
-            colStatBuilds.put(color.noAnime(), 0);
-        }
-        // loop over jobs
+        SortedMap<BallColor, Integer> colStatBuilds = new TreeMap<>();
+
         for (TopLevelItem job : jobs) {
             if (job instanceof Job) {
-
                 final Run<?, ?> lastBuild = ((Job<?, ?>) job).getLastBuild();
                 BallColor bColor = lastBuild.getIconColor();
                 if (bColor != null && bColor.noAnime() != null && colStatBuilds.get(bColor) != null) {
-                    colStatBuilds.put(bColor.noAnime(), colStatBuilds.get(bColor) + 1);
+                    colStatBuilds.merge(bColor.noAnime(), 1, Integer::sum);
                 }
             }
         }
         return colStatBuilds;
     }
 
-    public float roundFloatDecimal(float input) {
-        float rounded = (float) Math.round(input * 100f);
-        rounded = rounded / 100f;
-        return rounded;
-    }
-
-    public float getPercentage(int value, int nBuilds) {
-        return roundFloatDecimal((((float) value) / nBuilds) * 100);
+    public String getPercentage(int value, int nBuilds) {
+        float fraction = nBuilds != 0 ? (((float) value) / nBuilds) : 0;
+        return percentageFormat.format(fraction);
     }
 
     @Extension
