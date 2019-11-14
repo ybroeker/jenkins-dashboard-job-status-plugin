@@ -13,14 +13,10 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 public class JobStatusPortlet extends DashboardPortlet {
 
-    private final NumberFormat percentageFormat;
 
     @DataBoundConstructor
     public JobStatusPortlet(String name) {
         super(name);
-        percentageFormat = NumberFormat.getPercentInstance(Locale.ENGLISH);
-        percentageFormat.setMinimumFractionDigits(0);
-        percentageFormat.setMaximumFractionDigits(2);
     }
 
     public Map<BallColor, Integer> getBuildStat(List<TopLevelItem> jobs) {
@@ -29,8 +25,12 @@ public class JobStatusPortlet extends DashboardPortlet {
         for (TopLevelItem job : jobs) {
             if (job instanceof Job) {
                 final Run<?, ?> lastBuild = ((Job<?, ?>) job).getLastBuild();
+                if (lastBuild == null) {
+                    colStatBuilds.merge(BallColor.NOTBUILT, 1, Integer::sum);
+                    continue;
+                }
                 BallColor bColor = lastBuild.getIconColor();
-                if (bColor != null && bColor.noAnime() != null && colStatBuilds.get(bColor) != null) {
+                if (bColor != null && bColor.noAnime() != null) {
                     colStatBuilds.merge(bColor.noAnime(), 1, Integer::sum);
                 }
             }
@@ -40,7 +40,14 @@ public class JobStatusPortlet extends DashboardPortlet {
 
     public String getPercentage(int value, int nBuilds) {
         float fraction = nBuilds != 0 ? (((float) value) / nBuilds) : 0;
-        return percentageFormat.format(fraction);
+        return getPercentageFormat().format(fraction);
+    }
+
+    private NumberFormat getPercentageFormat() {
+        NumberFormat percentageFormat= NumberFormat.getPercentInstance(Locale.ENGLISH);
+        percentageFormat.setMinimumFractionDigits(0);
+        percentageFormat.setMaximumFractionDigits(2);
+        return percentageFormat;
     }
 
     @Extension
