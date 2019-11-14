@@ -1,77 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.jenkins-ci.plugins</groupId>
-    <artifactId>plugin</artifactId>
-    <version>3.48</version>
-  </parent>
-
-  <groupId>de.ybroeker</groupId>
-  <artifactId>jenkins-dashboard-job-status</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>hpi</packaging>
-
-  <name>Dashboard Job Status</name>
-  <description></description>
-  <url>https://github.com/ybroeker/jenkins-dashboard-job-status-plugin</url>
-  <licenses>
-    <license>
-      <name>MIT License</name>
-      <distribution>repo</distribution>
-      <url>https://opensource.org/licenses/MIT</url>
-    </license>
-  </licenses>
-
-  <properties>
-    <jenkins.version>2.89.4</jenkins.version>
-    <java.level>8</java.level>
-  </properties>
-
-  <dependencies>
-    <dependency>
+    <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>dashboard-view</artifactId>
-      <version>2.9.4</version>
-    </dependency>
+        <artifactId>plugin</artifactId>
+        <version>3.48</version>
+    </parent>
+
+    <groupId>de.ybroeker</groupId>
+    <artifactId>jenkins-dashboard-job-status</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>hpi</packaging>
+
+    <name>Dashboard Job Status</name>
+    <description></description>
+    <url>https://github.com/ybroeker/jenkins-dashboard-job-status-plugin</url>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <distribution>repo</distribution>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <properties>
+        <jenkins.version>2.89.4</jenkins.version>
+        <java.level>8</java.level>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>dashboard-view</artifactId>
+            <version>2.9.4</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>org.jenkins-ci.main</artifactId>
+                    <groupId>maven-plugin</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
 
+        <dependency>
+            <groupId>io.jenkins.stapler</groupId>
+            <artifactId>jenkins-stapler-support</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>io.jenkins.stapler</groupId>
-      <artifactId>jenkins-stapler-support</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.main</groupId>
+            <artifactId>maven-plugin</artifactId>
+            <version>3.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.5</version>
+            <scope>test</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>org.jenkins-ci.main</groupId>
-      <artifactId>maven-plugin</artifactId>
-      <version>3.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.main</groupId>
-      <artifactId>jenkins-test-harness-tools</artifactId>
-      <version>2.2</version>
-      <scope>test</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.main</groupId>
+            <artifactId>jenkins-test-harness</artifactId>
+            <scope>test</scope>
+          <exclusions>
+            <exclusion>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
 
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>3.11.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.11.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-  <repositories>
-    <repository>
-      <id>jenkins-releases</id>
-      <name>Jenkins Releases</name>
-      <url>https://repo.jenkins-ci.org/releases/</url>
-    </repository>
-  </repositories>
+    <repositories>
+        <repository>
+            <id>jenkins-releases</id>
+            <name>Jenkins Releases</name>
+            <url>https://repo.jenkins-ci.org/releases/</url>
+        </repository>
+    </repositories>
 
 </project>
