@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>dashboard-view</artifactId>
-            <version>2.9.4</version>
+            <version>2.16</version>
             <exclusions>
                 <exclusion>
                     <artifactId>org.jenkins-ci.main</artifactId>
